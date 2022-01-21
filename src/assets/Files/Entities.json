@@ -1,0 +1,10 @@
+[
+  {
+    "Name": "Entity",
+    "Icon": "fas fa-table fa-5x"
+  },
+  {
+    "Name": "Column",
+    "Icon": "fas fa-columns fa-5x"
+  }
+]
