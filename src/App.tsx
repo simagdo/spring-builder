@@ -1,35 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.sass';
 import AvailableEntities from "./components/AvailableEntities/AvailableEntities";
-import Drag from "./components/Drag/Drag";
 import Drop from "./components/Drop/Drop";
 
 function App() {
-
-    const PHOTO_URL =
-        "https://www.kindacode.com/wp-content/uploads/2021/06/cute-dog.jpeg";
-
-    const [content, setContent] = useState<string>("Drop something here");
-
-    // This function will be triggered when you start dragging
-    const dragStartHandler = (
-        event: React.DragEvent<HTMLDivElement>,
-        data: string
-    ) => {
-        event.dataTransfer.setData("text", data);
-    };
-
-    // This function will be triggered when dropping
-    const dropHandler = (event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        const data = event.dataTransfer.getData("text");
-        setContent(data);
-    }
-
-    // This makes the third box become droppable
-    const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-    }
 
     return (
         <div className="Grid-Container">
@@ -44,14 +18,7 @@ function App() {
                 <h1>Main</h1>
 
                 <div className="DragDrop-Container">
-                    <Drag id="Box1">
-                        <img src={PHOTO_URL}/>
-                    </Drag>
-                    <Drop>
-                        <div >
-
-                        </div>
-                    </Drop>
+                    <Drop/>
                 </div>
 
             </div>
