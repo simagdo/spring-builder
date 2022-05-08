@@ -2,8 +2,12 @@ import React from 'react';
 import './App.sass';
 import AvailableEntities from "./components/AvailableEntities/AvailableEntities";
 import Drop from "./components/Drop/Drop";
+import {useDarkMode} from "usehooks-ts";
 
 function App() {
+
+    const {isDarkMode, toggle, enable, disable} = useDarkMode();
+    console.log(`Dark Mode: ${isDarkMode}`)
 
     return (
         <div className="Grid-Container">

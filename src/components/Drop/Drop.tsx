@@ -28,8 +28,8 @@ const Drop = ({children}: Props) => {
         console.log(data);
 
         setTranslate({
-            top: event.clientY,
-            left: event.clientX
+            top: event.movementY,
+            left: event.movementX
         });
 
         const tile = <div
@@ -47,9 +47,7 @@ const Drop = ({children}: Props) => {
             onDragMove={handleDragMove}>
             <div
                 style={{
-                    position: 'absolute',
-                    top: `${translate.top}px`,
-                    left: `${translate.left}px`
+                    transform: `translateX(${translate.top}px) translateY(${translate.left}px)`
                 }}>
                 <Tile name={data} icon=""/>
             </div>
