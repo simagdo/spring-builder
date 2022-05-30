@@ -1,12 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {IEntity} from "../../utils/Interfaces";
 import './Entity.sass';
+import {Button} from "@mantine/core";
+import NewColumn from "../NewColumn/NewColumn";
 
 interface IProps {
     entity: IEntity
 }
 
 const Entity = ({entity}: IProps) => {
+
+    const [opened, setOpened] = useState<boolean>(false);
+
     return (
         <div
             className="Entity-Container"
@@ -17,7 +22,13 @@ const Entity = ({entity}: IProps) => {
             <div className="Entity">
                 <div className="Entity-Header">
                     <p>{entity.entityName}</p>
+                    <Button
+                        type="button"
+                        onClick={() => setOpened(true)}>
+                        Add Column
+                    </Button>
                 </div>
+
                 <div className="Entity-Columns">
                     <ul>
                         {entity.columns && entity.columns.map((column) => (
@@ -26,6 +37,9 @@ const Entity = ({entity}: IProps) => {
                     </ul>
                 </div>
             </div>
+            {opened && <NewColumn
+                entityName={entity.entityName}
+                initialState={opened}/>}
         </div>
     );
 };

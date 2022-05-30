@@ -1,6 +1,11 @@
+export enum ColumnType {
+    String = "STRING",
+    Integer = "INTEGER"
+}
+
 export interface IEntityColumn {
     columnName: string,
-    type: string
+    type: ColumnType
 }
 
 export interface IEntity {

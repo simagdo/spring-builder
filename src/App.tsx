@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import './App.sass';
 import {Box, Button, Container, Group, MantineProvider, Modal, TextInput} from "@mantine/core";
-import {IEntity, IEntityColumn} from "./utils/Interfaces";
+import {ColumnType, IEntity, IEntityColumn} from "./utils/Interfaces";
 import Sidebar from "./components/Sidebar";
 import {randomString} from "./utils/utils";
 import {Entity} from "./components";
 import {useForm} from "@mantine/form";
+import {useStateContext} from "./contexts/ContextProvider";
 
 function App() {
 
-    const [entities, setEntities] = useState<IEntity[]>([]);
+    const {entities, setEntities} = useStateContext();
     const [opened, setOpened] = useState<boolean>(false);
     const form = useForm<IEntity>({
         initialValues: {
@@ -29,7 +30,7 @@ function App() {
 
         let column: IEntityColumn = {
             columnName: randomString(),
-            type: 'String'
+            type: ColumnType.String
         }
         const entityColumns: Array<IEntityColumn> = [column];
 
@@ -44,7 +45,8 @@ function App() {
 
         console.log(newEntity)
 
-        setEntities([...entities, newEntity]);
+        setEntities && setEntities([...entities, newEntity]);
+        //entities.push(newEntity);
 
         // Close the Modal
         setOpened(false);
@@ -95,6 +97,7 @@ function App() {
                                 required
                                 label="Entity Name"
                                 placeholder="User"
+                                onBlur={(event) => form.setFieldValue('tableName', event.target.value.toLowerCase())}
                                 {...form.getInputProps('entityName')}/>
                             <TextInput
                                 required
