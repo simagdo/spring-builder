@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Box, Button, Checkbox, Group, Modal, NumberInput, Select, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {ColumnType, IEntity, IEntityColumn} from "../../utils/Interfaces";
@@ -7,7 +7,7 @@ import {useStateContext} from "../../contexts/ContextProvider";
 interface IProps {
     entityName: string,
     opened: boolean,
-    toggle: void
+    toggle: () => void
 }
 
 const NewColumn = ({entityName, opened, toggle}: IProps) => {
@@ -63,7 +63,6 @@ const NewColumn = ({entityName, opened, toggle}: IProps) => {
         setEntities && setEntities(newEntities)
 
         // Close the Modal
-        // @ts-ignore
         toggle();
 
         // Initialize the Form
@@ -75,7 +74,7 @@ const NewColumn = ({entityName, opened, toggle}: IProps) => {
         <>
             <Modal
                 opened={opened}
-                onClose={() => toggle}
+                onClose={toggle}
                 title={`Add Column to Entity ${entityName}`}>
 
                 <Box

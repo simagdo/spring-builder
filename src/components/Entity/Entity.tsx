@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {IEntity} from "../../utils/Interfaces";
 import './Entity.sass';
 import {Button} from "@mantine/core";
-import NewColumn from "../NewColumn/NewColumn";
+import {NewColumn} from 'components';
 
 interface IProps {
     entity: IEntity
@@ -42,7 +42,6 @@ const Entity = ({entity}: IProps) => {
             {opened && <NewColumn
                 entityName={entity.entityName}
                 opened={opened}
-                // @ts-ignore
                 toggle={toggle}/>}
         </div>
     );

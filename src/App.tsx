@@ -1,75 +1,17 @@
 import React, {useState} from 'react';
 import './App.sass';
-import {Box, Button, Container, Group, MantineProvider, Modal, TextInput} from "@mantine/core";
-import {ColumnType, IEntity, IEntityColumn} from "./utils/Interfaces";
+import {Button, Container, MantineProvider} from "@mantine/core";
 import Sidebar from "./components/Sidebar";
-import {randomString} from "./utils/utils";
-import {Entity} from "./components";
-import {useForm} from "@mantine/form";
+import {Entity, NewEntity} from "./components";
 import {useStateContext} from "./contexts/ContextProvider";
 
 function App() {
 
-    const {entities, setEntities} = useStateContext();
+    const {entities} = useStateContext();
     const [opened, setOpened] = useState<boolean>(false);
-    const form = useForm<IEntity>({
-        initialValues: {
-            entityName: '',
-            tableName: '',
-            columns: [],
-            positionX: 0,
-            positionY: 0,
-            collapsed: true
-        },
-        validate: {
-            tableName: (value) => (/[^a-z]/g.test(value) ? 'Only Small Letters are allowed' : null)
-        }
-    })
-
-    const addEntity = () => {
-
-        let column: IEntityColumn = {
-            columnName: randomString(),
-            type: ColumnType.String
-        }
-        const entityColumns: Array<IEntityColumn> = [column];
-
-        const newEntity = {
-            entityName: form.values.entityName,
-            tableName: form.values.tableName,
-            positionX: Math.floor(Math.random() * 250),
-            positionY: Math.floor(Math.random() * 50),
-            collapsed: true,
-            columns: []//entityColumns
-        };
-
-        console.log(newEntity)
-
-        setEntities && setEntities([...entities, newEntity]);
-        //entities.push(newEntity);
-
-        // Close the Modal
-        setOpened(false);
-
-        // Initialize the Form
-        form.reset();
-
-    }
+    const toggle = () => setOpened(!opened);
 
     const renderEntities = () => {
-        {/*
-                    <Box
-                        key={entity.entityName}
-                        component="div"
-                        style={{
-                            "marginTop": entity.positionY,
-                            "marginLeft": entity.positionX
-                        }}>
-                        <div>
-                            {entity.entityName}
-                        </div>
-                    </Box>*/
-        }
         return (
             <>
                 {entities.map((entity) => (
@@ -77,43 +19,6 @@ function App() {
                 ))}
             </>
         )
-    }
-
-    const newEntity = () => {
-        return (
-            <>
-                <Modal
-                    opened={opened}
-                    onClose={() => setOpened(false)}
-                    title="New Entity">
-
-                    <Box
-                        sx={{
-                            maxWidth: 300
-                        }}
-                        mx="auto">
-                        <form onSubmit={form.onSubmit(() => addEntity())}>
-                            <TextInput
-                                required
-                                label="Entity Name"
-                                placeholder="User"
-                                onBlur={(event) => form.setFieldValue('tableName', event.target.value.toLowerCase())}
-                                {...form.getInputProps('entityName')}/>
-                            <TextInput
-                                required
-                                label="Table Name"
-                                placeholder="User"
-                                {...form.getInputProps('tableName')}/>
-                            <Group position="right" mt="md">
-                                <Button type="submit">Submit</Button>
-                            </Group>
-
-                        </form>
-                    </Box>
-
-                </Modal>
-            </>
-        );
     }
 
     return (
@@ -128,7 +33,6 @@ function App() {
                     <h1>Left Sidebar</h1>
                     <Button
                         onClick={() => setOpened(true)}>Add new Entity</Button>
-                    {newEntity()}
                     <Sidebar entities={entities}/>
                 </div>
                 <div className="Topbar">
@@ -141,9 +45,12 @@ function App() {
                     </Container>
                 </div>
             </div>
+
+            {opened && <NewEntity
+                opened={opened}
+                toggle={toggle}/>}
+
         </MantineProvider>
-
-
     );
 }
 
