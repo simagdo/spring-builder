@@ -1,22 +1,29 @@
 import React, {useState} from 'react';
-import {Box, Button, Group, Modal, Select, TextInput} from "@mantine/core";
+import {Box, Button, Checkbox, Group, Modal, NumberInput, Select, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {ColumnType, IEntity, IEntityColumn} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
 
 interface IProps {
     entityName: string,
-    initialState: false | true
+    opened: boolean,
+    toggle: void
 }
 
-const NewColumn = ({entityName, initialState}: IProps) => {
+const NewColumn = ({entityName, opened, toggle}: IProps) => {
 
-    const [opened, setOpened] = useState<boolean>(initialState);
     const {entities, setEntities} = useStateContext();
     const form = useForm<IEntityColumn>({
         initialValues: {
             columnName: '',
-            type: ColumnType.String
+            type: ColumnType.String,
+            insertable: true,
+            length: 255,
+            nullable: true,
+            precision: 0,
+            scale: 0,
+            unique: false,
+            updatable: true
         }
     })
 
@@ -26,14 +33,20 @@ const NewColumn = ({entityName, initialState}: IProps) => {
     }))
 
     const addColumn = () => {
+
+        const values = form.values;
+
         const newColumn: IEntityColumn = {
-            columnName: form.values.columnName,
-            type: form.values.type
+            columnName: values.columnName,
+            type: values.type,
+            insertable: values.insertable,
+            length: values.length,
+            nullable: values.nullable,
+            precision: values.precision,
+            scale: values.scale,
+            unique: values.unique,
+            updatable: values.updatable
         }
-
-        const entity = entities.find(entity => entity.entityName === entityName);
-
-        //entity && entity.columns?.push(newColumn);
 
         // @ts-ignore
         const newEntities: Array<IEntity> = entities.map(newEntity => {
@@ -42,7 +55,6 @@ const NewColumn = ({entityName, initialState}: IProps) => {
                     ...newEntity,
                     columns: newEntity.columns?.concat(newColumn)
                 }
-                return newEntity;
             }
         })
 
@@ -50,11 +62,9 @@ const NewColumn = ({entityName, initialState}: IProps) => {
 
         setEntities && setEntities(newEntities)
 
-        // @ts-ignore
-        //setEntities && setEntities([...entities, entity]);
-
         // Close the Modal
-        setOpened(false);
+        // @ts-ignore
+        toggle();
 
         // Initialize the Form
         form.reset();
@@ -65,7 +75,7 @@ const NewColumn = ({entityName, initialState}: IProps) => {
         <>
             <Modal
                 opened={opened}
-                onClose={() => setOpened(false)}
+                onClose={() => toggle}
                 title={`Add Column to Entity ${entityName}`}>
 
                 <Box
@@ -81,7 +91,41 @@ const NewColumn = ({entityName, initialState}: IProps) => {
                         <Select
                             label="Column Type"
                             placeholder="Pick one"
+                            searchable
                             data={columnTypes}/>
+                        <Checkbox
+                            label="Insertable"
+                            placeholder="True"
+                            checked={true}
+                            {...form.getInputProps('insertable')}/>
+                        <NumberInput
+                            label="Length"
+                            placeholder="255"
+                            defaultValue={255}
+                            {...form.getInputProps('length')}/>
+                        <Checkbox
+                            label="Nullable"
+                            placeholder="True"
+                            checked={true}
+                            {...form.getInputProps('nullable')}/>
+                        <NumberInput
+                            label="Precision"
+                            placeholder=""
+                            defaultValue={0}
+                            {...form.getInputProps('precision')}/>
+                        <NumberInput
+                            label="Scale"
+                            placeholder="0"
+                            defaultValue={0}
+                            {...form.getInputProps('scale')}/>
+                        <Checkbox
+                            label="Unique"
+                            checked={false}
+                            {...form.getInputProps('unique')}/>
+                        <Checkbox
+                            label="Updatable"
+                            checked={true}
+                            {...form.getInputProps('updatable')}/>
                         <Group position="right" mt="md">
                             <Button type="submit">Submit</Button>
                         </Group>

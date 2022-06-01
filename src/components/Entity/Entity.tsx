@@ -11,6 +11,8 @@ interface IProps {
 const Entity = ({entity}: IProps) => {
 
     const [opened, setOpened] = useState<boolean>(false);
+    console.log(opened)
+    const toggle = () => setOpened(!opened);
 
     return (
         <div
@@ -39,7 +41,9 @@ const Entity = ({entity}: IProps) => {
             </div>
             {opened && <NewColumn
                 entityName={entity.entityName}
-                initialState={opened}/>}
+                opened={opened}
+                // @ts-ignore
+                toggle={toggle}/>}
         </div>
     );
 };
