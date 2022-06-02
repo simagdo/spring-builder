@@ -3,19 +3,22 @@ import {Box, Button, Group, Modal, TextInput} from '@mantine/core';
 import {useForm} from "@mantine/form";
 import {IEntity} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
+import {useLocalStorage} from "@mantine/hooks";
 
 interface IProps {
     opened: boolean,
-    toggle: () => void
+    toggle: () => void,
+    entityName?: string
 }
 
-const NewEntity = ({opened, toggle}: IProps) => {
+const EntityModal = ({opened, toggle, entityName}: IProps) => {
 
     const {entities, setEntities} = useStateContext();
+    const entity = entities.find((ent) => ent.entityName === entityName);
     const form = useForm<IEntity>({
         initialValues: {
-            entityName: '',
-            tableName: '',
+            entityName: entity !== undefined ? entity.entityName : '',
+            tableName: entity !== undefined ? entity.tableName : '',
             columns: [],
             positionX: 0,
             positionY: 0,
@@ -24,7 +27,10 @@ const NewEntity = ({opened, toggle}: IProps) => {
         validate: {
             tableName: (value) => (/[^a-z]/g.test(value) ? 'Only Small Letters are allowed' : null)
         }
-    })
+    });
+    const [value, setValue] = useLocalStorage({
+        key: 'entities'
+    });
 
     const addEntity = () => {
 
@@ -39,7 +45,23 @@ const NewEntity = ({opened, toggle}: IProps) => {
 
         console.log(newEntity)
 
-        setEntities && setEntities([...entities, newEntity]);
+        if (entity) {
+            const elements = [...entities];
+            const entityIndex = elements.findIndex(element => element.entityName === entityName);
+            if (entityIndex === -1) return;
+            elements[entityIndex].entityName = form.values.entityName;
+            elements[entityIndex].tableName = form.values.tableName;
+
+            setEntities && setEntities(elements);
+
+            // Save the current Entities in the Local Storage
+            setValue(JSON.stringify(elements));
+        } else {
+            setEntities && setEntities([...entities, newEntity]);
+
+            // Save the current Entities in the Local Storage
+            setValue(JSON.stringify([...entities, newEntity]));
+        }
 
         // Close the Modal
         toggle();
@@ -85,4 +107,4 @@ const NewEntity = ({opened, toggle}: IProps) => {
     );
 };
 
-export default NewEntity;
+export default EntityModal;

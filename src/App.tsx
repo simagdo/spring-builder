@@ -1,15 +1,28 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.sass';
 import {Button, Container, MantineProvider} from "@mantine/core";
 import Sidebar from "./components/Sidebar";
-import {Entity, NewEntity} from "./components";
+import {Entity, EntityModal} from "./components";
 import {useStateContext} from "./contexts/ContextProvider";
+import {useLocalStorage} from "@mantine/hooks";
 
 function App() {
 
-    const {entities} = useStateContext();
+    const {entities, setEntities} = useStateContext();
     const [opened, setOpened] = useState<boolean>(false);
     const toggle = () => setOpened(!opened);
+    const [value, setValue] = useLocalStorage({
+        key: 'entities'
+    });
+
+    useEffect(() => {
+
+        if (setEntities && value) {
+            console.log(JSON.parse(value))
+            setEntities(JSON.parse(value));
+        }
+
+    }, [value]);
 
     const renderEntities = () => {
         return (
@@ -46,7 +59,7 @@ function App() {
                 </div>
             </div>
 
-            {opened && <NewEntity
+            {opened && <EntityModal
                 opened={opened}
                 toggle={toggle}/>}
 

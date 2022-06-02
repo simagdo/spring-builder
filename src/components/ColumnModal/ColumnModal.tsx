@@ -3,6 +3,7 @@ import {Box, Button, Checkbox, Group, Modal, NumberInput, Select, TextInput} fro
 import {useForm} from "@mantine/form";
 import {ColumnType, IEntity, IEntityColumn} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
+import {useLocalStorage} from "@mantine/hooks";
 
 interface IProps {
     entityName: string,
@@ -10,7 +11,7 @@ interface IProps {
     toggle: () => void
 }
 
-const NewColumn = ({entityName, opened, toggle}: IProps) => {
+const ColumnModal = ({entityName, opened, toggle}: IProps) => {
 
     const {entities, setEntities} = useStateContext();
     const form = useForm<IEntityColumn>({
@@ -25,7 +26,10 @@ const NewColumn = ({entityName, opened, toggle}: IProps) => {
             unique: false,
             updatable: true
         }
-    })
+    });
+    const [value, setValue] = useLocalStorage({
+        key: 'entities'
+    });
 
     const columnTypes = Object.keys(ColumnType).map(type => ({
         value: type,
@@ -67,6 +71,9 @@ const NewColumn = ({entityName, opened, toggle}: IProps) => {
 
         // Initialize the Form
         form.reset();
+
+        // Save the current Entities in the Local Storage
+        setValue(JSON.stringify(newEntities));
 
     }
 
@@ -137,4 +144,4 @@ const NewColumn = ({entityName, opened, toggle}: IProps) => {
     );
 };
 
-export default NewColumn;
+export default ColumnModal;
