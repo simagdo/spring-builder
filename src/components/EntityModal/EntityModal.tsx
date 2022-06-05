@@ -15,6 +15,7 @@ const EntityModal = ({opened, toggle, entityName}: IProps) => {
 
     const {entities, setEntities} = useStateContext();
     const entity = entities.find((ent) => ent.entityName === entityName);
+    const title = entity !== undefined ? `Edit Entity ${entityName}` : 'New Entity';
     const form = useForm<IEntity>({
         initialValues: {
             entityName: entity !== undefined ? entity.entityName : '',
@@ -76,7 +77,7 @@ const EntityModal = ({opened, toggle, entityName}: IProps) => {
             <Modal
                 opened={opened}
                 onClose={toggle}
-                title="New Entity">
+                title={title}>
 
                 <Box
                     sx={{

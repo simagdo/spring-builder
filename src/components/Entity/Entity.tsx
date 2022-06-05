@@ -4,6 +4,7 @@ import './Entity.sass';
 import {ActionIcon, Button, Group} from "@mantine/core";
 import {Pencil} from "tabler-icons-react";
 import {ColumnModal, EntityModal} from "../index";
+import {generateUUID} from "../../utils/utils";
 
 interface IProps {
     entity: IEntity
@@ -13,8 +14,20 @@ const Entity = ({entity}: IProps) => {
 
     const [openedColumn, setOpenedColumn] = useState<boolean>(false);
     const [openedEntity, setOpenedEntity] = useState<boolean>(false);
-    const toggleColumnModal = () => setOpenedColumn(!openedColumn);
+    const [selectedColumn, setSelectedColumn] = useState<string>('');
+    const toggleColumnModal = () => {
+        setOpenedColumn(!openedColumn);
+        setSelectedColumn('');
+    };
     const toggleEntityModal = () => setOpenedEntity(!openedEntity);
+
+    const onColumnSelect = (event: React.MouseEvent<HTMLButtonElement>): void => {
+        let attribute = event.currentTarget.getAttribute('data-column-name');
+        if (attribute)
+            setSelectedColumn(attribute);
+
+        setOpenedColumn(true);
+    }
 
     return (
         <div
@@ -47,7 +60,24 @@ const Entity = ({entity}: IProps) => {
                 <div className="Entity-Columns">
                     <ul>
                         {entity.columns && entity.columns.map((column) => (
-                            <li key={`Entity-${entity.entityName}-${column.columnName}`}>{column.columnName}</li>
+                            <li
+                                key={generateUUID()}
+                                className='Entity-Column'>
+                                <span>{column.columnName}</span>
+                                <span>({column.type})</span>
+                                <Group
+                                    position="right"
+                                    spacing="sm">
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="hover"
+                                        onClick={onColumnSelect}
+                                        data-column-name={column.columnName}>
+                                        <Pencil size={16}/>
+                                    </ActionIcon>
+
+                                </Group>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -59,7 +89,8 @@ const Entity = ({entity}: IProps) => {
             {openedColumn && <ColumnModal
                 entityName={entity.entityName}
                 opened={openedColumn}
-                toggle={toggleColumnModal}/>}
+                toggle={toggleColumnModal}
+                columnName={selectedColumn}/>}
         </div>
     );
 };

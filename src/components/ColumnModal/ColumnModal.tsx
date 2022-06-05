@@ -1,30 +1,36 @@
 import React from 'react';
 import {Box, Button, Checkbox, Group, Modal, NumberInput, Select, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {ColumnType, IEntity, IEntityColumn} from "../../utils/Interfaces";
+import {IEntity, IEntityColumn} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
 import {useLocalStorage} from "@mantine/hooks";
+import {ColumnType} from "../../utils/Enums";
 
 interface IProps {
     entityName: string,
     opened: boolean,
-    toggle: () => void
+    toggle: () => void,
+    columnName?: string
 }
 
-const ColumnModal = ({entityName, opened, toggle}: IProps) => {
+const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
 
     const {entities, setEntities} = useStateContext();
+    let entity = entities.find((entity) => entity.entityName === entityName);
+    let column = entity && entity.columns?.find((column) => column.columnName === columnName);
+    const title = column !== undefined ? `Edit Column ${column.columnName} on Entity ${entityName}` : `Add Column to Entity ${entityName}`;
+    console.log(column);
     const form = useForm<IEntityColumn>({
         initialValues: {
-            columnName: '',
-            type: ColumnType.String,
-            insertable: true,
-            length: 255,
-            nullable: true,
-            precision: 0,
-            scale: 0,
-            unique: false,
-            updatable: true
+            columnName: column !== undefined ? column.columnName : '',
+            type: column !== undefined ? column.type : ColumnType.String,
+            insertable: column !== undefined ? column.insertable : true,
+            length: column !== undefined ? column.length : 255,
+            nullable: column !== undefined ? column.nullable : true,
+            precision: column !== undefined ? column.precision : 0,
+            scale: column !== undefined ? column.scale : 0,
+            unique: column !== undefined && column.unique,
+            updatable: column !== undefined ? column.updatable : true
         }
     });
     const [value, setValue] = useLocalStorage({
@@ -32,7 +38,8 @@ const ColumnModal = ({entityName, opened, toggle}: IProps) => {
     });
 
     const columnTypes = Object.keys(ColumnType).map(type => ({
-        value: type,
+        // @ts-ignore
+        value: ColumnType[type],
         label: type
     }))
 
@@ -52,28 +59,46 @@ const ColumnModal = ({entityName, opened, toggle}: IProps) => {
             updatable: values.updatable
         }
 
-        // @ts-ignore
-        const newEntities: Array<IEntity> = entities.map(newEntity => {
-            if (newEntity.entityName === entityName) {
-                return {
-                    ...newEntity,
-                    columns: newEntity.columns?.concat(newColumn)
-                }
+        if (entity && column) {
+            column = {
+                ...form.values
             }
-        })
+            console.log(column)
+            const columnIndex = entity.columns?.findIndex((column) => column.columnName === columnName);
+            if (columnIndex === -1) return;
+            // @ts-ignore
+            entity.columns[columnIndex] = column;
 
-        console.log(entities);
+            setEntities && setEntities(entities);
 
-        setEntities && setEntities(newEntities)
+            // Save the current Entities in the Local Storage
+            setValue(JSON.stringify(entities));
+        } else {
+
+            // @ts-ignore
+            const newEntities: Array<IEntity> = entities.map(newEntity => {
+                if (newEntity.entityName === entityName) {
+                    return {
+                        ...newEntity,
+                        columns: newEntity.columns?.concat(newColumn)
+                    }
+                }
+            })
+
+            console.log(entities);
+
+            setEntities && setEntities(newEntities)
+
+            // Save the current Entities in the Local Storage
+            setValue(JSON.stringify(newEntities));
+
+        }
 
         // Close the Modal
         toggle();
 
         // Initialize the Form
         form.reset();
-
-        // Save the current Entities in the Local Storage
-        setValue(JSON.stringify(newEntities));
 
     }
 
@@ -82,7 +107,7 @@ const ColumnModal = ({entityName, opened, toggle}: IProps) => {
             <Modal
                 opened={opened}
                 onClose={toggle}
-                title={`Add Column to Entity ${entityName}`}>
+                title={title}>
 
                 <Box
                     sx={{
@@ -98,12 +123,13 @@ const ColumnModal = ({entityName, opened, toggle}: IProps) => {
                             label="Column Type"
                             placeholder="Pick one"
                             searchable
-                            data={columnTypes}/>
+                            defaultValue={column && column.type}
+                            data={columnTypes}
+                            {...form.getInputProps('type')}/>
                         <Checkbox
                             label="Insertable"
-                            placeholder="True"
-                            checked={true}
-                            {...form.getInputProps('insertable')}/>
+                            defaultChecked={true}
+                            {...form.getInputProps('insertable', {type: 'checkbox'})}/>
                         <NumberInput
                             label="Length"
                             placeholder="255"
@@ -111,9 +137,8 @@ const ColumnModal = ({entityName, opened, toggle}: IProps) => {
                             {...form.getInputProps('length')}/>
                         <Checkbox
                             label="Nullable"
-                            placeholder="True"
-                            checked={true}
-                            {...form.getInputProps('nullable')}/>
+                            defaultChecked={true}
+                            {...form.getInputProps('nullable', {type: 'checkbox'})}/>
                         <NumberInput
                             label="Precision"
                             placeholder=""
@@ -126,12 +151,11 @@ const ColumnModal = ({entityName, opened, toggle}: IProps) => {
                             {...form.getInputProps('scale')}/>
                         <Checkbox
                             label="Unique"
-                            checked={false}
-                            {...form.getInputProps('unique')}/>
+                            {...form.getInputProps('unique', {type: 'checkbox'})}/>
                         <Checkbox
                             label="Updatable"
-                            checked={true}
-                            {...form.getInputProps('updatable')}/>
+                            defaultChecked={true}
+                            {...form.getInputProps('updatable', {type: 'checkbox'})}/>
                         <Group position="right" mt="md">
                             <Button type="submit">Submit</Button>
                         </Group>

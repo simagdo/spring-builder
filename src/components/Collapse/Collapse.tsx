@@ -1,5 +1,6 @@
 import React, {ReactNode, useState} from "react";
 import './Collapse.sass';
+import {generateUUID} from "../../utils/utils";
 
 type Props = {
     collapsed: boolean,
@@ -15,6 +16,7 @@ const Collapse = ({collapsed, title, children}: Props) => {
         <div className="Collapse">
             <button
                 className={`Collapse-Button ${isCollapsed ? 'Collapsed' : 'Expanded'}`}
+                key={`Collapse-Button-${generateUUID()}`}
                 onClick={() => {
                     setIsCollapsed(!isCollapsed)
                 }}>
@@ -22,6 +24,7 @@ const Collapse = ({collapsed, title, children}: Props) => {
             </button>
             <div
                 className={`Collapse-Content ${isCollapsed ? 'Collapsed' : 'Expanded'}`}
+                key={`Collapse-Content-${generateUUID()}`}
                 aria-expanded={isCollapsed}>
                 {children}
             </div>

@@ -1,7 +1,4 @@
-export enum ColumnType {
-    String = "STRING",
-    Integer = "INTEGER"
-}
+import {ColumnType} from "./Enums";
 
 export interface IEntityColumn {
     columnName: string,
