@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import {IEntity} from "../../utils/Interfaces";
 import './Entity.sass';
 import {ActionIcon, Button, Group} from "@mantine/core";
-import {Pencil} from "tabler-icons-react";
+import {Pencil, Trash} from "tabler-icons-react";
 import {ColumnModal, EntityModal} from "../index";
 import {generateUUID} from "../../utils/utils";
+import {useStateContext} from "../../contexts/ContextProvider";
+import {useLocalStorage} from "@mantine/hooks";
 
 interface IProps {
     entity: IEntity
@@ -12,9 +14,13 @@ interface IProps {
 
 const Entity = ({entity}: IProps) => {
 
+    const {entities, setEntities} = useStateContext();
     const [openedColumn, setOpenedColumn] = useState<boolean>(false);
     const [openedEntity, setOpenedEntity] = useState<boolean>(false);
     const [selectedColumn, setSelectedColumn] = useState<string>('');
+    const [value, setValue] = useLocalStorage({
+        key: 'entities'
+    });
     const toggleColumnModal = () => {
         setOpenedColumn(!openedColumn);
         setSelectedColumn('');
@@ -27,6 +33,30 @@ const Entity = ({entity}: IProps) => {
             setSelectedColumn(attribute);
 
         setOpenedColumn(true);
+    }
+
+    const onEntityDelete = (event: React.MouseEvent<HTMLButtonElement>): void => {
+        const entityName = event.currentTarget.getAttribute('data-entity-name');
+        const entityIndex = entities.findIndex((currentEntity) => currentEntity.entityName === entityName);
+        entities.splice(entityIndex, 1);
+        setEntities && setEntities(entities);
+
+        // Save the current Entities in the Local Storage
+        setValue(JSON.stringify(entities));
+    }
+
+    const onColumnDelete = (event: React.MouseEvent<HTMLButtonElement>): void => {
+        const columnName = event.currentTarget.getAttribute('data-column-name');
+        const columnIndex = entity && entity.columns && entity.columns.findIndex((column) => column.columnName === columnName);
+        if (columnIndex === -1) return;
+        if (columnIndex != null) {
+            entity.columns?.splice(columnIndex, 1);
+            setEntities && setEntities(entities);
+
+            // Save the current Entities in the Local Storage
+            setValue(JSON.stringify(entities));
+        }
+
     }
 
     return (
@@ -54,6 +84,14 @@ const Entity = ({entity}: IProps) => {
                             data-entity-name={entity.entityName}>
                             <Pencil size={16}/>
                         </ActionIcon>
+                        <ActionIcon
+                            title="Delete"
+                            size="sm"
+                            variant="hover"
+                            onClick={onEntityDelete}
+                            data-entity-name={entity.entityName}>
+                            <Trash size={16}/>
+                        </ActionIcon>
                     </Group>
                 </div>
 
@@ -69,13 +107,21 @@ const Entity = ({entity}: IProps) => {
                                     position="right"
                                     spacing="sm">
                                     <ActionIcon
+                                        title="Edit"
                                         size="sm"
                                         variant="hover"
                                         onClick={onColumnSelect}
                                         data-column-name={column.columnName}>
                                         <Pencil size={16}/>
                                     </ActionIcon>
-
+                                    <ActionIcon
+                                        title="Delete"
+                                        size="sm"
+                                        variant="hover"
+                                        onClick={onColumnDelete}
+                                        data-column-name={column.columnName}>
+                                        <Trash size={16}/>
+                                    </ActionIcon>
                                 </Group>
                             </li>
                         ))}
