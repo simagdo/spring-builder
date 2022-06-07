@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import './App.sass';
-import {Button, Container, MantineProvider} from "@mantine/core";
+import {Button, ColorScheme, ColorSchemeProvider, Container, MantineProvider} from "@mantine/core";
 import Sidebar from "./components/Sidebar";
-import {Entity, EntityModal} from "./components";
+import {Entity, EntityModal, Navbar} from "./components";
 import {useStateContext} from "./contexts/ContextProvider";
-import {useLocalStorage} from "@mantine/hooks";
+import {useColorScheme, useLocalStorage} from "@mantine/hooks";
+import {generateUUID} from "./utils/utils";
+import {getCookie, setCookies} from "cookies-next";
 
 function App() {
 
@@ -14,6 +16,20 @@ function App() {
     const [value, setValue] = useLocalStorage({
         key: 'entities'
     });
+
+    const preferredColorScheme = useColorScheme();
+    const test: ColorScheme = getCookie('spring-builder-color-scheme') as "light" | "dark";
+    const [colorScheme, setColorScheme] = useState<ColorScheme>(test);
+
+    const toggleColorScheme = (value?: ColorScheme) => {
+        let nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
+        setColorScheme(nextColorScheme);
+
+        // Save the Theme in a Cookie
+        setCookies('spring-builder-color-scheme', nextColorScheme, {
+            maxAge: 60 * 60 * 24 * 30
+        });
+    };
 
     useEffect(() => {
 
@@ -28,42 +44,49 @@ function App() {
         return (
             <>
                 {entities.map((entity) => (
-                    <Entity entity={entity}/>
+                    <Entity
+                        entity={entity}
+                        key={generateUUID()}/>
                 ))}
             </>
         )
     }
 
     return (
-        <MantineProvider
-            theme={{
-                colorScheme: 'dark'
-            }}
-            withGlobalStyles
-            withNormalizeCSS>
-            <div className="Grid-Container">
-                <div className="Left-Sidebar">
-                    <h1>Left Sidebar</h1>
-                    <Button
-                        onClick={() => setOpened(true)}>Add new Entity</Button>
-                    <Sidebar entities={entities}/>
+        <ColorSchemeProvider
+            colorScheme={colorScheme}
+            toggleColorScheme={toggleColorScheme}>
+            <MantineProvider
+                theme={{
+                    colorScheme
+                }}
+                withGlobalStyles
+                withNormalizeCSS>
+                <div className="Grid-Container">
+                    <div className="Left-Sidebar">
+                        <h1>Entities</h1>
+                        <Button
+                            onClick={() => setOpened(true)}>Add new Entity</Button>
+                        <Sidebar entities={entities}/>
+                    </div>
+                    <div className="Topbar">
+                        <Navbar
+                            colorScheme={colorScheme}
+                            toggleColorScheme={toggleColorScheme}/>
+                    </div>
+                    <div className="Main">
+                        <Container>
+                            {renderEntities()}
+                        </Container>
+                    </div>
                 </div>
-                <div className="Topbar">
-                    <h1>Top Bar</h1>
-                </div>
-                <div className="Main">
-                    <Container>
-                        <h1>Main</h1>
-                        {renderEntities()}
-                    </Container>
-                </div>
-            </div>
 
-            {opened && <EntityModal
-                opened={opened}
-                toggle={toggle}/>}
+                {opened && <EntityModal
+                    opened={opened}
+                    toggle={toggle}/>}
 
-        </MantineProvider>
+            </MantineProvider>
+        </ColorSchemeProvider>
     );
 }
 

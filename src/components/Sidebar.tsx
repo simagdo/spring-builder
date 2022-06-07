@@ -10,7 +10,7 @@ interface IProps {
 
 const Sidebar = ({entities}: IProps) => {
     return (
-        <div>
+        <div key="Sidebar">
             {
                 entities.map((entity) => (
                     <>
@@ -18,7 +18,8 @@ const Sidebar = ({entities}: IProps) => {
                             collapsed={entity.collapsed}
                             title={entity.entityName}
                             key={`Collapse-${generateUUID()}`}>
-                            <Text>
+                            <Text
+                                key={generateUUID()}>
                                 Content will follow
                             </Text>
                         </Collapse>

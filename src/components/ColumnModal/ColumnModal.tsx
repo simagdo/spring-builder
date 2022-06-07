@@ -128,7 +128,6 @@ const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
                             {...form.getInputProps('type')}/>
                         <Checkbox
                             label="Insertable"
-                            defaultChecked={true}
                             {...form.getInputProps('insertable', {type: 'checkbox'})}/>
                         <NumberInput
                             label="Length"
@@ -137,7 +136,6 @@ const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
                             {...form.getInputProps('length')}/>
                         <Checkbox
                             label="Nullable"
-                            defaultChecked={true}
                             {...form.getInputProps('nullable', {type: 'checkbox'})}/>
                         <NumberInput
                             label="Precision"
@@ -154,7 +152,6 @@ const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
                             {...form.getInputProps('unique', {type: 'checkbox'})}/>
                         <Checkbox
                             label="Updatable"
-                            defaultChecked={true}
                             {...form.getInputProps('updatable', {type: 'checkbox'})}/>
                         <Group position="right" mt="md">
                             <Button type="submit">Submit</Button>

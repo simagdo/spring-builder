@@ -78,6 +78,7 @@ const Entity = ({entity}: IProps) => {
                             Add Column
                         </Button>
                         <ActionIcon
+                            title="Edit"
                             size="sm"
                             variant="hover"
                             onClick={() => setOpenedEntity(true)}
