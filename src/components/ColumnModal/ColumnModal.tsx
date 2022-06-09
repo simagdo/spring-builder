@@ -5,6 +5,7 @@ import {IEntity, IEntityColumn} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
 import {useLocalStorage} from "@mantine/hooks";
 import {ColumnType} from "../../utils/Enums";
+import {useTranslation} from "react-i18next";
 
 interface IProps {
     entityName: string,
@@ -18,7 +19,13 @@ const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
     const {entities, setEntities} = useStateContext();
     let entity = entities.find((entity) => entity.entityName === entityName);
     let column = entity && entity.columns?.find((column) => column.columnName === columnName);
-    const title = column !== undefined ? `Edit Column ${column.columnName} on Entity ${entityName}` : `Add Column to Entity ${entityName}`;
+    const {t} = useTranslation();
+    const title = column !== undefined ? t('form.editColumnTitle', {
+        columnName: columnName,
+        entityName: entityName
+    }) : t('form.addColumnTitle', {
+        entityName: entityName
+    });
     console.log(column);
     const form = useForm<IEntityColumn>({
         initialValues: {
@@ -117,44 +124,44 @@ const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
                     <form onSubmit={form.onSubmit(() => addColumn())}>
                         <TextInput
                             required
-                            label="Column Name"
+                            label={t('form.columnName')}
                             {...form.getInputProps('columnName')}/>
                         <Select
-                            label="Column Type"
+                            label={t('form.columnType')}
                             placeholder="Pick one"
                             searchable
                             defaultValue={column && column.type}
                             data={columnTypes}
                             {...form.getInputProps('type')}/>
                         <Checkbox
-                            label="Insertable"
+                            label={t('form.insertable')}
                             {...form.getInputProps('insertable', {type: 'checkbox'})}/>
                         <NumberInput
-                            label="Length"
+                            label={t('form.length')}
                             placeholder="255"
                             defaultValue={255}
                             {...form.getInputProps('length')}/>
                         <Checkbox
-                            label="Nullable"
+                            label={t('form.nullable')}
                             {...form.getInputProps('nullable', {type: 'checkbox'})}/>
                         <NumberInput
-                            label="Precision"
+                            label={t('form.precision')}
                             placeholder=""
                             defaultValue={0}
                             {...form.getInputProps('precision')}/>
                         <NumberInput
-                            label="Scale"
+                            label={t('form.scale')}
                             placeholder="0"
                             defaultValue={0}
                             {...form.getInputProps('scale')}/>
                         <Checkbox
-                            label="Unique"
+                            label={t('form.unique')}
                             {...form.getInputProps('unique', {type: 'checkbox'})}/>
                         <Checkbox
-                            label="Updatable"
+                            label={t('form.updatable')}
                             {...form.getInputProps('updatable', {type: 'checkbox'})}/>
                         <Group position="right" mt="md">
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit">{t('buttons.save')}</Button>
                         </Group>
 
                     </form>

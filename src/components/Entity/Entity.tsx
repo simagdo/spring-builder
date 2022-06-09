@@ -7,6 +7,7 @@ import {ColumnModal, EntityModal} from "../index";
 import {generateUUID} from "../../utils/utils";
 import {useStateContext} from "../../contexts/ContextProvider";
 import {useLocalStorage} from "@mantine/hooks";
+import {useTranslation} from "react-i18next";
 
 interface IProps {
     entity: IEntity
@@ -21,6 +22,7 @@ const Entity = ({entity}: IProps) => {
     const [value, setValue] = useLocalStorage({
         key: 'entities'
     });
+    const {t} = useTranslation();
     const toggleColumnModal = () => {
         setOpenedColumn(!openedColumn);
         setSelectedColumn('');
@@ -75,10 +77,10 @@ const Entity = ({entity}: IProps) => {
                         <Button
                             type="button"
                             onClick={() => setOpenedColumn(true)}>
-                            Add Column
+                            {t('common.addColumn')}
                         </Button>
                         <ActionIcon
-                            title="Edit"
+                            title={t('common.edit')}
                             size="sm"
                             variant="hover"
                             onClick={() => setOpenedEntity(true)}
@@ -86,7 +88,7 @@ const Entity = ({entity}: IProps) => {
                             <Pencil size={16}/>
                         </ActionIcon>
                         <ActionIcon
-                            title="Delete"
+                            title={t('common.delete')}
                             size="sm"
                             variant="hover"
                             onClick={onEntityDelete}
@@ -108,7 +110,7 @@ const Entity = ({entity}: IProps) => {
                                     position="right"
                                     spacing="sm">
                                     <ActionIcon
-                                        title="Edit"
+                                        title={t('common.edit')}
                                         size="sm"
                                         variant="hover"
                                         onClick={onColumnSelect}
@@ -116,7 +118,7 @@ const Entity = ({entity}: IProps) => {
                                         <Pencil size={16}/>
                                     </ActionIcon>
                                     <ActionIcon
-                                        title="Delete"
+                                        title={t('common.delete')}
                                         size="sm"
                                         variant="hover"
                                         onClick={onColumnDelete}

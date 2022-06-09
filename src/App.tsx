@@ -7,6 +7,7 @@ import {useStateContext} from "./contexts/ContextProvider";
 import {useColorScheme, useLocalStorage} from "@mantine/hooks";
 import {generateUUID} from "./utils/utils";
 import {getCookie, setCookies} from "cookies-next";
+import {useTranslation} from "react-i18next";
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
     const [value, setValue] = useLocalStorage({
         key: 'entities'
     });
+    const {t} = useTranslation('common');
 
     const preferredColorScheme = useColorScheme();
     const test: ColorScheme = getCookie('spring-builder-color-scheme') as "light" | "dark";
@@ -64,9 +66,11 @@ function App() {
                 withNormalizeCSS>
                 <div className="Grid-Container">
                     <div className="Left-Sidebar">
-                        <h1>Entities</h1>
+                        <h1>{t('common.entities')}</h1>
                         <Button
-                            onClick={() => setOpened(true)}>Add new Entity</Button>
+                            onClick={() => setOpened(true)}>
+                            {t('common.newEntity')}
+                        </Button>
                         <Sidebar entities={entities}/>
                     </div>
                     <div className="Topbar">

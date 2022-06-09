@@ -1,8 +1,9 @@
 import React from 'react';
 import springIcon from '../../assets/Images/spring.png';
 import './Navbar.sass';
-import {ActionIcon, ColorScheme, Group, useMantineColorScheme} from "@mantine/core";
-import {Sun, MoonStars} from 'tabler-icons-react';
+import {ActionIcon, ColorScheme, Select} from "@mantine/core";
+import {MoonStars, Sun} from 'tabler-icons-react';
+import {useTranslation} from "react-i18next";
 
 interface IProps {
     colorScheme: ColorScheme,
@@ -12,6 +13,18 @@ interface IProps {
 const Navbar = ({colorScheme, toggleColorScheme}: IProps) => {
 
     const dark = colorScheme === 'dark';
+    const {t, i18n} = useTranslation('common');
+
+    const languages = [
+        {
+            value: 'de',
+            label: 'Germany'
+        },
+        {
+            value: 'en',
+            label: 'English'
+        }
+    ]
 
     return (
         <div className="Navbar-Container">
@@ -28,9 +41,16 @@ const Navbar = ({colorScheme, toggleColorScheme}: IProps) => {
                         variant="outline"
                         color={dark ? 'yellow' : 'blue'}
                         onClick={() => toggleColorScheme()}
-                        title="Toggle color Scheme">
+                        title={t('common.toggleScheme')}>
                         {dark ? <Sun size={18}/> : <MoonStars size={18}/>}
                     </ActionIcon>
+                </div>
+                <div className="Navbar-Language">
+                    <Select
+                        data={languages}
+                        label={t('common.changeLanguage')}
+                        value={i18n.language}
+                        onChange={(value) => typeof value === 'string' && i18n.changeLanguage(value)}/>
                 </div>
             </div>
         </div>

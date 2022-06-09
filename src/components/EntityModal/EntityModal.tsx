@@ -4,6 +4,7 @@ import {useForm} from "@mantine/form";
 import {IEntity} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
 import {useLocalStorage} from "@mantine/hooks";
+import {useTranslation} from "react-i18next";
 
 interface IProps {
     opened: boolean,
@@ -15,7 +16,12 @@ const EntityModal = ({opened, toggle, entityName}: IProps) => {
 
     const {entities, setEntities} = useStateContext();
     const entity = entities.find((ent) => ent.entityName === entityName);
-    const title = entity !== undefined ? `Edit Entity ${entityName}` : 'New Entity';
+    const {t} = useTranslation();
+    const title = entity !== undefined ? t('form.editEntityTitle', {
+        entityName: entityName
+    }) : t('form.addEntityTitle', {
+        entityName: entityName
+    });
     const form = useForm<IEntity>({
         initialValues: {
             entityName: entity !== undefined ? entity.entityName : '',
@@ -87,13 +93,13 @@ const EntityModal = ({opened, toggle, entityName}: IProps) => {
                     <form onSubmit={form.onSubmit(() => addEntity())}>
                         <TextInput
                             required
-                            label="Entity Name"
+                            label={t('form.entityName')}
                             placeholder="User"
                             onBlur={(event) => form.setFieldValue('tableName', event.target.value.toLowerCase())}
                             {...form.getInputProps('entityName')}/>
                         <TextInput
                             required
-                            label="Table Name"
+                            label={t('form.tableName')}
                             placeholder="User"
                             {...form.getInputProps('tableName')}/>
                         <Group position="right" mt="md">

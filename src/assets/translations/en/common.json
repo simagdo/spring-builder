@@ -1,0 +1,31 @@
+{
+  "common": {
+    "newEntity": "New Entity",
+    "entities": "Entities",
+    "addColumn": "Add Column",
+    "edit": "Edit",
+    "delete": "Delete",
+    "changeLanguage": "Change Language",
+    "toggleScheme": "Change Theme"
+  },
+  "buttons": {
+    "save": "Save"
+  },
+  "form": {
+    "columnName": "Column Name",
+    "columnType": "Column Type",
+    "insertable": "Insertable",
+    "length": "Length",
+    "nullable": "Nullable",
+    "precision": "Precision",
+    "scale": "Scale",
+    "unique": "Unique",
+    "updatable": "Updatable",
+    "entityName": "Entity Name",
+    "tableName": "Table Name",
+    "addColumnTitle": "Add Column to Entity {{entityName}}",
+    "editColumnTitle": "Edit Column {{columnName}} on Entity {{entityName}}",
+    "addEntityTitle": "Add new Entity",
+    "editEntityTitle": "Edit Entity {{entityName}}"
+  }
+}

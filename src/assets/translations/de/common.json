@@ -1,0 +1,31 @@
+{
+  "common": {
+    "newEntity": "Neue Entität",
+    "entities": "Entitäten",
+    "addColumn": "Neue Spalte",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "changeLanguage": "Sprache ändern",
+    "toggleScheme": "Aussehen verändern"
+  },
+  "buttons": {
+    "save": "Speichern"
+  },
+  "form": {
+    "columnName": "Spaltenname",
+    "columnType": "Spaltentyp",
+    "insertable": "Einfügbar",
+    "length": "Länge",
+    "nullable": "Nullbar",
+    "precision": "Präzision",
+    "scale": "Skalierung",
+    "unique": "Einzigartig",
+    "updatable": "Aktualisierbar",
+    "entityName": "Entitätsname",
+    "tableName": "Tabellenname",
+    "addColumnTitle": "Neue Spalte zur Entität {{entityName}} hinzufügen",
+    "editColumnTitle": "Spalte {{columnName}} auf der Entität {{entityName}} bearbeiten",
+    "addEntityTitle": "Neue Entität hinzufügen",
+    "editEntityTitle": "Entität {{entityName}} bearbeiten"
+  }
+}
