@@ -2,14 +2,15 @@
   "common": {
     "newEntity": "New Entity",
     "entities": "Entities",
-    "addColumn": "Add Column",
     "edit": "Edit",
     "delete": "Delete",
     "changeLanguage": "Change Language",
     "toggleScheme": "Change Theme"
   },
   "buttons": {
-    "save": "Save"
+    "save": "Save",
+    "addColumn": "Add Column",
+    "addRelation": "Add new Relation"
   },
   "form": {
     "columnName": "Column Name",

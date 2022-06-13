@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.sass';
-import {Button, ColorScheme, ColorSchemeProvider, Container, MantineProvider} from "@mantine/core";
+import {Button, ColorScheme, ColorSchemeProvider, Container, Group, MantineProvider} from "@mantine/core";
 import Sidebar from "./components/Sidebar";
 import {Entity, EntityModal, Navbar} from "./components";
 import {useStateContext} from "./contexts/ContextProvider";
@@ -8,6 +8,7 @@ import {useColorScheme, useLocalStorage} from "@mantine/hooks";
 import {generateUUID} from "./utils/utils";
 import {getCookie, setCookies} from "cookies-next";
 import {useTranslation} from "react-i18next";
+import {NotificationsProvider} from "@mantine/notifications";
 
 function App() {
 
@@ -64,31 +65,38 @@ function App() {
                 }}
                 withGlobalStyles
                 withNormalizeCSS>
-                <div className="Grid-Container">
-                    <div className="Left-Sidebar">
-                        <h1>{t('common.entities')}</h1>
-                        <Button
-                            onClick={() => setOpened(true)}>
-                            {t('common.newEntity')}
-                        </Button>
-                        <Sidebar entities={entities}/>
+                <NotificationsProvider
+                    position="top-center"
+                    zIndex={2077}>
+                    <div className="Grid-Container">
+                        <div className="Left-Sidebar">
+                            <h1>{t('common.entities')}</h1>
+                            <Group
+                                position="center">
+                                <Button
+                                    onClick={() => setOpened(true)}>
+                                    {t('common.newEntity')}
+                                </Button>
+                            </Group>
+                            <Sidebar entities={entities}/>
+                        </div>
+                        <div className="Topbar">
+                            <Navbar
+                                colorScheme={colorScheme}
+                                toggleColorScheme={toggleColorScheme}/>
+                        </div>
+                        <div className="Main">
+                            <Container>
+                                {renderEntities()}
+                            </Container>
+                        </div>
                     </div>
-                    <div className="Topbar">
-                        <Navbar
-                            colorScheme={colorScheme}
-                            toggleColorScheme={toggleColorScheme}/>
-                    </div>
-                    <div className="Main">
-                        <Container>
-                            {renderEntities()}
-                        </Container>
-                    </div>
-                </div>
 
-                {opened && <EntityModal
-                    opened={opened}
-                    toggle={toggle}/>}
+                    {opened && <EntityModal
+                        opened={opened}
+                        toggle={toggle}/>}
 
+                </NotificationsProvider>
             </MantineProvider>
         </ColorSchemeProvider>
     );

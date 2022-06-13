@@ -1,4 +1,4 @@
-import {ColumnType} from "./Enums";
+import {ColumnType, RelationShipType} from "./Enums";
 
 export interface IEntityColumn {
     columnName: string,
@@ -12,11 +12,17 @@ export interface IEntityColumn {
     updatable?: true | false
 }
 
+export interface IRelation {
+    child: IEntity,
+    relationType: RelationShipType
+}
+
 export interface IEntity {
     entityName: string,
     tableName: string,
     positionX: number,
     positionY: number,
     collapsed: boolean,
-    columns?: Array<IEntityColumn>
+    columns: Array<IEntityColumn>,
+    relationship: Array<IRelation>
 }

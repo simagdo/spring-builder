@@ -29,7 +29,8 @@ const EntityModal = ({opened, toggle, entityName}: IProps) => {
             columns: [],
             positionX: 0,
             positionY: 0,
-            collapsed: true
+            collapsed: true,
+            relationship: []
         },
         validate: {
             tableName: (value) => (/[^a-z]/g.test(value) ? 'Only Small Letters are allowed' : null)
@@ -47,7 +48,8 @@ const EntityModal = ({opened, toggle, entityName}: IProps) => {
             positionX: Math.floor(Math.random() * 250),
             positionY: Math.floor(Math.random() * 50),
             collapsed: true,
-            columns: []
+            columns: [],
+            relationship: []
         };
 
         console.log(newEntity)

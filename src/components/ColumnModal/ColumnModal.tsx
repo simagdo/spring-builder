@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Button, Checkbox, Group, Modal, NumberInput, Select, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {IEntity, IEntityColumn} from "../../utils/Interfaces";
+import {IEntityColumn} from "../../utils/Interfaces";
 import {useStateContext} from "../../contexts/ContextProvider";
 import {useLocalStorage} from "@mantine/hooks";
 import {ColumnType} from "../../utils/Enums";
@@ -82,22 +82,18 @@ const ColumnModal = ({entityName, opened, toggle, columnName}: IProps) => {
             setValue(JSON.stringify(entities));
         } else {
 
-            // @ts-ignore
-            const newEntities: Array<IEntity> = entities.map(newEntity => {
-                if (newEntity.entityName === entityName) {
-                    return {
-                        ...newEntity,
-                        columns: newEntity.columns?.concat(newColumn)
-                    }
-                }
-            })
+            const entityIndex = entities.findIndex(ent => ent.entityName === entityName);
+
+            if (entityIndex === -1) return;
+
+            entities[entityIndex].columns = entities[entityIndex].columns.concat(newColumn);
 
             console.log(entities);
 
-            setEntities && setEntities(newEntities)
+            setEntities && setEntities(entities)
 
             // Save the current Entities in the Local Storage
-            setValue(JSON.stringify(newEntities));
+            setValue(JSON.stringify(entities));
 
         }
 

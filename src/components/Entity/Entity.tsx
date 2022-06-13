@@ -3,11 +3,12 @@ import {IEntity} from "../../utils/Interfaces";
 import './Entity.sass';
 import {ActionIcon, Button, Group} from "@mantine/core";
 import {Pencil, Trash} from "tabler-icons-react";
-import {ColumnModal, EntityModal} from "../index";
+import {ColumnModal, EntityModal, RelationModal} from "../index";
 import {generateUUID} from "../../utils/utils";
 import {useStateContext} from "../../contexts/ContextProvider";
 import {useLocalStorage} from "@mantine/hooks";
 import {useTranslation} from "react-i18next";
+import {showNotification} from "@mantine/notifications";
 
 interface IProps {
     entity: IEntity
@@ -18,6 +19,7 @@ const Entity = ({entity}: IProps) => {
     const {entities, setEntities} = useStateContext();
     const [openedColumn, setOpenedColumn] = useState<boolean>(false);
     const [openedEntity, setOpenedEntity] = useState<boolean>(false);
+    const [openedRelationship, setOpenedRelationship] = useState<boolean>(false);
     const [selectedColumn, setSelectedColumn] = useState<string>('');
     const [value, setValue] = useLocalStorage({
         key: 'entities'
@@ -28,6 +30,12 @@ const Entity = ({entity}: IProps) => {
         setSelectedColumn('');
     };
     const toggleEntityModal = () => setOpenedEntity(!openedEntity);
+    const toggleRelationModal = () => {
+        if (!entity.columns?.length) {
+
+        }
+        setOpenedRelationship(!openedRelationship);
+    };
 
     const onColumnSelect = (event: React.MouseEvent<HTMLButtonElement>): void => {
         let attribute = event.currentTarget.getAttribute('data-column-name');
@@ -77,7 +85,24 @@ const Entity = ({entity}: IProps) => {
                         <Button
                             type="button"
                             onClick={() => setOpenedColumn(true)}>
-                            {t('common.addColumn')}
+                            {t('buttons.addColumn')}
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => {
+
+                                if (!entity.columns?.length) {
+                                    showNotification({
+                                        title: 'No Column',
+                                        message: 'Please specify at least one Column',
+                                        color: 'red',
+                                        autoClose: 3000
+                                    })
+                                } else {
+                                    setOpenedRelationship(true);
+                                }
+                            }}>
+                            {t('buttons.addRelation')}
                         </Button>
                         <ActionIcon
                             title={t('common.edit')}
@@ -140,6 +165,10 @@ const Entity = ({entity}: IProps) => {
                 opened={openedColumn}
                 toggle={toggleColumnModal}
                 columnName={selectedColumn}/>}
+            {openedRelationship && <RelationModal
+                opened={openedRelationship}
+                toggle={toggleRelationModal}
+                currentEntity={entity}/>}
         </div>
     );
 };

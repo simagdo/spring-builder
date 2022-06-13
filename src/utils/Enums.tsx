@@ -13,3 +13,9 @@ export enum ColumnType {
     Date = 'DATE',
     Timestamp = 'TIMESTAMP'
 }
+
+export enum RelationShipType {
+    OneToOne = 'ONE_TO_ONE',
+    OneToMany = 'ONE_TO_MANY',
+    ManyToMany = 'MANY_TO_MANY'
+}

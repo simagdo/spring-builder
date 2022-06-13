@@ -5,3 +5,4 @@ export {default as AvailableEntities} from './AvailableEntities/AvailableEntitie
 export {default as EntityModal} from './EntityModal/EntityModal';
 export {default as ColumnModal} from './ColumnModal/ColumnModal';
 export {default as Navbar} from './Navbar/Navbar';
+export {default as RelationModal} from './RelationModal/RelationModal';

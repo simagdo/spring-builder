@@ -2,14 +2,15 @@
   "common": {
     "newEntity": "Neue Entität",
     "entities": "Entitäten",
-    "addColumn": "Neue Spalte",
     "edit": "Bearbeiten",
     "delete": "Löschen",
     "changeLanguage": "Sprache ändern",
     "toggleScheme": "Aussehen verändern"
   },
   "buttons": {
-    "save": "Speichern"
+    "save": "Speichern",
+    "addColumn": "Neue Spalte",
+    "addRelation": "Neue Relation"
   },
   "form": {
     "columnName": "Spaltenname",
