@@ -20,8 +20,7 @@ const RelationModal = ({opened, toggle, currentEntity}: IProps) => {
 
     const form = useForm<IRelation>({
         initialValues: {
-            // @ts-ignore
-            child: null,
+            childName: '',
             relationType: RelationShipType.OneToOne
         }
     })
@@ -47,7 +46,7 @@ const RelationModal = ({opened, toggle, currentEntity}: IProps) => {
         const values = form.values;
 
         let newRelation: IRelation = {
-            child: values.child,
+            childName: values.childName,
             relationType: values.relationType
         }
 
@@ -92,7 +91,7 @@ const RelationModal = ({opened, toggle, currentEntity}: IProps) => {
                                 required
                                 label="Available Entities"
                                 data={availableEntities}
-                                {...form.getInputProps('child')}/>
+                                {...form.getInputProps('childName')}/>
                             <Select
                                 required
                                 label="Relationship Type"

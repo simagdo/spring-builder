@@ -23,6 +23,7 @@ function App() {
     const preferredColorScheme = useColorScheme();
     const test: ColorScheme = getCookie('spring-builder-color-scheme') as "light" | "dark";
     const [colorScheme, setColorScheme] = useState<ColorScheme>(test);
+    const [references, setReferences] = useState();
 
     const toggleColorScheme = (value?: ColorScheme) => {
         let nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
@@ -46,11 +47,46 @@ function App() {
     const renderEntities = () => {
         return (
             <>
-                {entities.map((entity) => (
-                    <Entity
-                        entity={entity}
-                        key={generateUUID()}/>
-                ))}
+                {entities.map((entity) => {
+
+                    const x1 = entity.positionX;
+                    const y1 = entity.positionY;
+
+                    return (
+                        <div>
+                            <Entity
+                                entity={entity}
+                                key={generateUUID()}/>
+                            {
+                                entity.relationship.map(relation => {
+
+                                    const relationIndex = entities.findIndex(ent => ent.entityName === relation.childName);
+
+                                    if (relationIndex === -1) return;
+
+                                    const childEntity = entities[relationIndex];
+
+                                    const x2 = childEntity.positionX;
+                                    const y2 = childEntity.positionY;
+
+                                    console.log(`X1: ${x1} Y1: ${y1} X2: ${x2} Y2: ${y2} Entity: ${relation.childName}`)
+
+                                    return (
+                                        <svg height={210} width={210}>
+                                            <line
+                                                x1={x1}
+                                                x2={x2}
+                                                y1={y1}
+                                                y2={y2}
+                                                strokeWidth={2}
+                                                stroke="#285de8"/>
+                                        </svg>
+                                    );
+                                })
+                            }
+                        </div>
+                    );
+                })}
             </>
         )
     }

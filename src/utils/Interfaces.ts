@@ -13,7 +13,7 @@ export interface IEntityColumn {
 }
 
 export interface IRelation {
-    child: IEntity,
+    childName: string,
     relationType: RelationShipType
 }
 
